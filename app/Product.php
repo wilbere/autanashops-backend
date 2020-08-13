@@ -26,7 +26,7 @@ class Product extends Model
 
     public function category()
     {
-        return $this->belongsTo(Category::class);
+        return $this->morphOne(Category::class, 'categorizable');
     }
 
     public function units()

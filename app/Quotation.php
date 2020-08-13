@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Invoices extends Model
+class Quotation extends Model
 {
     /**
      * The attributes that are mass assignable.
@@ -12,7 +12,7 @@ class Invoices extends Model
      * @var array
      */
     protected $fillable = [
-        'date', 'invoice_number', 'subtotal','total_tax', 'total'
+        'date', 'quotation_number','due_date', 'subtotal','total_tax', 'total'
     ];
 
     /**
@@ -20,7 +20,7 @@ class Invoices extends Model
      *
      * @var string
      */
-    protected $primaryKey = 'invoice_number';
+    protected $primaryKey = 'quotation_number';
 
     public function status()
     {
@@ -29,7 +29,6 @@ class Invoices extends Model
 
     public function orders()
     {
-        return $this->hasMany(Order::class);
+        return $this->morphMany(Order::class, 'orederable');
     }
-
 }

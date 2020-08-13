@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCategoriesTable extends Migration
+class AddExpensesIdToWarehousesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,11 @@ class CreateCategoriesTable extends Migration
      */
     public function up()
     {
-        Schema::create('categories', function (Blueprint $table) {
-            $table->id();
+        Schema::table('warehouses', function (Blueprint $table) {
+            $table->unsignedBigInteger('expense_id')->unsigned();
 
-            $table->morphs('categorizable');
-            $table->string('name');
-            $table->text('description');
+            $table->foreign('expense_id')->references('id')->on('expenses');
 
-            $table->softDeletes();
-            $table->timestamps();
         });
     }
 
@@ -32,6 +28,8 @@ class CreateCategoriesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('categories');
+        Schema::table('warehouses', function (Blueprint $table) {
+            //
+        });
     }
 }

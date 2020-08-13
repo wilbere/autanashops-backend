@@ -15,8 +15,9 @@ class Category extends Model
         'name', 'description',
     ];
 
-    public function products()
+    public function categorizable()
     {
-        return $this->hasMany(Product::class);
+        return $this->morphTo();
     }
+
 }

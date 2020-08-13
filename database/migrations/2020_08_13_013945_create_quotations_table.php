@@ -1,10 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-class CreateInvoicesTable extends Migration
+class CreateQuotationsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,8 @@ class CreateInvoicesTable extends Migration
      */
     public function up()
     {
-        Schema::create('invoices', function (Blueprint $table) {
-            // $table->bigIncrements('id');
-            $table->string('invoice_number',10)->primary();
+        Schema::create('quotations', function (Blueprint $table) {
+            $table->string('quotation_number',10)->primary();
 
             $table->date('date');
             $table->text('seller_note');
@@ -23,8 +22,10 @@ class CreateInvoicesTable extends Migration
             $table->string('subtotal');
             $table->string('total_tax');
             $table->string('total');
+            $table->date('due_date');
             $table->string('discount');
             $table->string('shipping_cost');
+
 
             $table->softDeletes();
             $table->timestamps();
@@ -39,6 +40,6 @@ class CreateInvoicesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('invoices');
+        Schema::dropIfExists('quotations');
     }
 }
