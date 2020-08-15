@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 //     return view('welcome');
 // });
 
-// Route::post('/login', 'Auth\LoginController@login');
+Route::post('/login', 'Auth\LoginController@login');
 // Auth::routes();
 
 // Route::get('/home', 'HomeController@index')->name('home');

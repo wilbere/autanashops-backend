@@ -5,10 +5,11 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 
 use Spatie\Tags\HasTags;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends Model
 {
-    use HasTags;
+    use HasTags, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.

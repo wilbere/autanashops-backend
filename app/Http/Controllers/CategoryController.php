@@ -5,8 +5,20 @@ namespace App\Http\Controllers;
 use App\Category;
 use Illuminate\Http\Request;
 
+
 class CategoryController extends Controller
 {
+    /**
+     * @protected Category $category
+     */
+    protected $category;
+
+    public function __construct(Category $category)
+    {
+        $this->category = $category;
+    }
+
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +26,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
+        return response()->json([$this->category->get(), 200]);
     }
 
     /**
@@ -36,7 +48,7 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        //
+        return response()->json([$category, 200]);
     }
 
     /**
@@ -59,6 +71,8 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        //
+        $category->delete();
+
+        return response()->json(['deleted success', 200]);
     }
 }
