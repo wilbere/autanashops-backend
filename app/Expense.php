@@ -22,6 +22,6 @@ class Expense extends Model
 
     public function score()
     {
-        return $this->belongsTo();
+        return $this->belongsTo(Score::class);
     }
 }

@@ -16,7 +16,7 @@ class CreateCategoriesTable extends Migration
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
 
-            $table->morphs('categorizable');
+            $table->nullableMorphs('categorizable');
             $table->string('name');
             $table->text('description');
 
