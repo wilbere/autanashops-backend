@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
+
     public function login(UserLoginRequest $request)
     {
         $credentials = [
@@ -41,20 +42,39 @@ class AuthController extends Controller
 
     public function register(UserRegisterRequest $request)
     {
-        $user = User::create([
-            "name" => $request->name,
-            "username" => $request->username,
-            "email" => $request->email,
-            "password" => Hash::make($request->password)
-        ]);
+        if ($validated = $request->validate()) {
 
-        $token = $user->createToken('Autanashops')->accessToken;
+            $user = User::create([
+                "name" => $request->name,
+                "username" => $request->username,
+                "email" => $request->email,
+                "password" => Hash::make($request->password)
+            ]);
 
-        return response()->json([
-            'res' => true,
-            'token' => $token,
-            'message' => 'Usuario Registrado con exito'
-        ], 200);
+            $token = $user->createToken('Autanashops')->accessToken;
+
+            return response()->json([
+                'res' => true,
+                'token' => $token,
+                'message' => 'Usuario Registrado con exito'
+            ], 200);
+        } else {
+
+            $errors = $validated->errors();
+
+            $data = [
+                "name" => $errors-first('name'),
+                "username" => $errors-first('username'),
+                "email" => $errors-first('email'),
+                "password" => $errors-first('password'),
+            ];
+
+            return response()->json([
+                'res' => true,
+                'err' => $data,
+            ], 422);
+
+        }
 
     }
 }
