@@ -14,20 +14,29 @@ class AuthController extends Controller
 {
     public function login(UserLoginRequest $request)
     {
-        $token = Client::where('password_client', 1)->first();
-
-        $data =  [
-            'grant_type' => 'password',
-            'client_id' => $token->id,
-            'client_secret' => $token->secret,
-            'username' => $request->email,
-            'password' => $request->password,
-            'scope' => '*',
+        $credentials = [
+            'email' => $request->email,
+            'password' => $request->password
         ];
 
-        $tokenRequest = Request::create('/oauth/token', 'post', $data);
+        if (auth()->attempt($credentials))
+        {
+            $token = auth()->user()->createToken('Autanashops')->accessToken;
 
-        return app()->handle($tokenRequest);
+            return response()->json([
+                'res' => true,
+                'token' => $token,
+                'message' => 'Bienvenido al sistema'
+            ], 200);
+
+        } else {
+
+            return response()->json([
+                'res' => false,
+                'message' => 'Tus credenciales no son validas'
+            ], 200);
+
+        }
     }
 
     public function register(UserRegisterRequest $request)
@@ -39,14 +48,13 @@ class AuthController extends Controller
             "password" => Hash::make($request->password)
         ]);
 
-        $login = [
-            "email" => $user->email,
-            "password" => $user->password
-        ];
+        $token = $user->createToken('Autanashops')->accessToken;
 
-        $loginAttemp = Request::create(route('api.login'),'post', $login);
+        return response()->json([
+            'res' => true,
+            'token' => $token,
+            'message' => 'Usuario Registrado con exito'
+        ], 200);
 
-        // dd($loginAttemp);
-        return $loginAttemp;
     }
 }
