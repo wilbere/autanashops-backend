@@ -19,5 +19,42 @@ Route::post('/register', 'Api\AuthController@register')->name('api.register');
 
 
 Route::middleware('auth:api')->group(function () {
+
+    /**
+     * User Module
+     */
     Route::apiResource('/user', 'UserController');
+
+    /**
+     * Category Module
+     */
+    Route::apiResource('/category', 'CategoryController');
+
+    /**
+     * Tax Module
+     */
+    Route::apiResource('/tax', 'TaxController');
+
+    /**
+     * Brand Module
+     */
+    Route::apiResource('/brand', 'BrandController');
+
+
+    /**
+     * Currency Module
+     */
+    Route::apiResource('/currency', 'CurrencyController');
+
+
+    /**
+     * Unit Module
+     */
+    Route::apiResource('/unit', 'UnitController');
+
+
+    /**
+     * Warehouse Module
+     */
+    Route::apiResource('/warehouse', 'WarehouseController');
 });

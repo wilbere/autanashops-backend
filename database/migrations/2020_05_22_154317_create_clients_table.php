@@ -22,7 +22,7 @@ class CreateClientsTable extends Migration
             $table->string('email');
             $table->string('phone');
             $table->string('rif')->nullable()->unique();
-            $table->boolean('supplier')->comment('This field will determine if the customer is a supplier or not.');
+            $table->boolean('is_supplier')->comment('This field will determine if the customer is a supplier or not.');
 
 
             $table->softDeletes();
