@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddExpensesIdToWarehousesTable extends Migration
+class CreateExpensesWarehousesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,20 @@ class AddExpensesIdToWarehousesTable extends Migration
      */
     public function up()
     {
-        Schema::table('warehouses', function (Blueprint $table) {
+        Schema::create('expenses_warehouses', function (Blueprint $table) {
+            $table->id();
+
+            $table->unsignedBigInteger('warehouse_id')->unsigned();
             $table->unsignedBigInteger('expense_id')->unsigned();
 
-            $table->foreign('expense_id')->references('id')->on('expenses');
+            $table->string('qty');
 
+            $table->softDeletes();
+            $table->timestamps();
+
+            $table->foreign('warehouse_id')->references('id')->on('warehouses');
+
+            $table->foreign('expense_id')->references('id')->on('products');
         });
     }
 
