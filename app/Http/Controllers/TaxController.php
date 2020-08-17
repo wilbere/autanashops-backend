@@ -4,9 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Tax;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class TaxController extends Controller
 {
+
+    protected $tax;
+
+    public function __construct(Tax $tax)
+    {
+        $this->tax = $tax;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +23,7 @@ class TaxController extends Controller
      */
     public function index()
     {
-        //
+        return response()->json([$this->tax->get(), 200]);
     }
 
     /**
@@ -25,7 +34,22 @@ class TaxController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            "name" => 'required',
+            "rate" => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['Error', $validator->errors()->all(),200]);
+        } else {
+
+            $this->tax->name = $request->name;
+            $this->tax->rate = $request->rate;
+            $this->tax->save();
+
+            return response()->json(['Created Success', $this->tax, 200]);
+        }
+
     }
 
     /**
@@ -36,7 +60,7 @@ class TaxController extends Controller
      */
     public function show(Tax $tax)
     {
-        //
+        return response()->json([$tax, 200]);
     }
 
     /**
@@ -48,7 +72,21 @@ class TaxController extends Controller
      */
     public function update(Request $request, Tax $tax)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            "name" => 'required',
+            "rate" => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['Error', $validator->errors()->all(),200]);
+        } else {
+
+            $this->tax->name = $request->name;
+            $this->tax->rate = $request->rate;
+            $this->tax->save();
+
+            return response()->json(['Update Success', $this->tax, 200]);
+        }
     }
 
     /**
@@ -59,6 +97,7 @@ class TaxController extends Controller
      */
     public function destroy(Tax $tax)
     {
-        //
+        $tax->delete();
+        return response()->json(['Delete Success', 200]);
     }
 }
