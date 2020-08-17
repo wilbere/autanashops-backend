@@ -4,10 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Brand;
 use Illuminate\Http\Request;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class BrandController extends Controller
 {
+    protected $brand;
+
+    public function __construct(Brand $brand)
+    {
+        $this->brand = $brand;
+    }
+
+
     /**
      * Display a listing of the resource.
      *
@@ -15,7 +22,7 @@ class BrandController extends Controller
      */
     public function index()
     {
-        //
+        return $this->brand->get();
     }
 
     /**
@@ -26,7 +33,10 @@ class BrandController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->category->name = $request->name;
+        $this->category->save();
+
+        return response()->json(['Created Success', $this->category, 200]);
     }
 
     /**
@@ -37,7 +47,7 @@ class BrandController extends Controller
      */
     public function show(Brand $brand)
     {
-        //
+        return response()->json([$brand, 200]);
     }
 
     /**
@@ -49,7 +59,10 @@ class BrandController extends Controller
      */
     public function update(Request $request, Brand $brand)
     {
-        //
+        $brand->name = $request->name;
+        $brand->save();
+
+        return response()->json(['updated success', $brand, 200]);
     }
 
     /**
@@ -60,6 +73,7 @@ class BrandController extends Controller
      */
     public function destroy(Brand $brand)
     {
-        //
+        $brand->delete();
+        return response()->json(['Delete Success', 200]);
     }
 }

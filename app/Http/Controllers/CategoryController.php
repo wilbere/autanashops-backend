@@ -37,7 +37,12 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->category->name = $request->name;
+        $this->category->description = $request->description;
+        $this->category->save();
+
+        return response()->json(['Created Success', $this->category, 200]);
+
     }
 
     /**
