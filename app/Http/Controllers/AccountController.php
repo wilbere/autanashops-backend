@@ -3,10 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Account;
+use App\User;
+use Auth;
 use Illuminate\Http\Request;
+use App\Http\Resources\UserResource;
+use App\Http\Requests\AccountRequest;
+use Illuminate\Support\Facades\Validator;
 
 class AccountController extends Controller
 {
+
+    protected $account;
+
+    public function __construct(Account $account)
+    {
+        $this->account = $account;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +27,12 @@ class AccountController extends Controller
      */
     public function index()
     {
-        //
+        $user = Auth::user();
+        if ($user->account != null) {
+            return response()->json([new UserResource($user), 200]);
+        } else {
+            return response()->json([$user, 200]);
+        }
     }
 
     /**
@@ -23,9 +41,39 @@ class AccountController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(AccountRequest $request)
     {
-        //
+        $user = Auth::user();
+
+        $validator = Validator::make($request->all(),[
+            'name' => 'required',
+            'rif' => 'required|max:14',
+            'email' => 'required|email',
+            'phone' => 'required|numeric',
+            'address' => 'required',
+            'city' => 'required',
+            'country' => 'required'
+
+        ]);
+
+        if ($validator->fails()) {
+
+            return response()->json(['Error', $validator->errors()->all(),200]);
+
+        } else {
+
+            $this->account->name = $request->name;
+            $this->account->rif = $request->rif;
+            $this->account->email = $request->email;
+            $this->account->phone = $request->phone;
+            $this->account->address = $request->address;
+            $this->account->city = $request->city;
+            $this->account->country = $request->country;
+
+            $user->account()->save($this->account);
+
+            return response()->json(['Created Success', new UserResource($user), 200]);
+        }
     }
 
     /**
@@ -36,7 +84,9 @@ class AccountController extends Controller
      */
     public function show(Account $account)
     {
-        //
+        $user = Auth::user();
+
+        return response()->json(['Created Success', new UserResource($user), 200]);
     }
 
     /**
@@ -48,7 +98,37 @@ class AccountController extends Controller
      */
     public function update(Request $request, Account $account)
     {
-        //
+        $user = Auth::user();
+
+        $validator = Validator::make($request->all(),[
+            'name' => 'required',
+            'rif' => 'required|max:14',
+            'email' => 'required|email',
+            'phone' => 'required|numeric',
+            'address' => 'required',
+            'city' => 'required',
+            'country' => 'required'
+
+        ]);
+
+        if ($validator->fails()) {
+
+            return response()->json(['Error', $validator->errors()->all(),200]);
+
+        } else {
+
+            $account->name = $request->name;
+            $account->rif = $request->rif;
+            $account->email = $request->email;
+            $account->phone = $request->phone;
+            $account->address = $request->address;
+            $account->city = $request->city;
+            $account->country = $request->country;
+
+            $user->account()->save($account);
+
+            return response()->json(['Updated Success', new UserResource($user), 200]);
+        }
     }
 
     /**
@@ -59,6 +139,8 @@ class AccountController extends Controller
      */
     public function destroy(Account $account)
     {
-        //
+        $account->delete();
+        return response()->json(['Delete Success', 200]);
+
     }
 }

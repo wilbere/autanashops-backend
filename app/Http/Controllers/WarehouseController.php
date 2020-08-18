@@ -62,7 +62,7 @@ class WarehouseController extends Controller
      */
     public function show(Warehouse $warehouse)
     {
-        //
+        return response()->json([$warehouse, 200]);
     }
 
     /**
@@ -74,7 +74,25 @@ class WarehouseController extends Controller
      */
     public function update(Request $request, Warehouse $warehouse)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            "name" => 'required',
+            "email" => 'required|email',
+            "phone" => 'required|numeric',
+            "address" => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['Error', $validator->errors()->all(),200]);
+        } else {
+
+            $this->warehouse->name = $request->name;
+            $this->warehouse->email = $request->email;
+            $this->warehouse->phone = $request->phone;
+            $this->warehouse->address = $request->address;
+            $this->warehouse->save();
+
+            return response()->json(['Created Success', $this->warehouse, 200]);
+        }
     }
 
     /**
@@ -85,6 +103,7 @@ class WarehouseController extends Controller
      */
     public function destroy(Warehouse $warehouse)
     {
-        //
+        $warehouse->delete();
+        return response()->json(['Delete Success', 200]);
     }
 }

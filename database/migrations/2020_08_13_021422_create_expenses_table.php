@@ -23,8 +23,6 @@ class CreateExpensesTable extends Migration
             $table->softDeletes();
             $table->timestamps();
 
-            $table->foreign('warehouse_id')->references('id')->on('warehouses');
-
         });
     }
 

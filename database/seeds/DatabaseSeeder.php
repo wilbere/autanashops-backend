@@ -28,6 +28,7 @@ class DatabaseSeeder extends Seeder
         $this->call(TaxSeeder::class);
         $this->call(UnitSeeder::class);
         $this->call(WarehouseSeeder::class);
+        $this->call(ImageSeeder::class);
 
 
     }
