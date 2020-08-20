@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Client;
 use Illuminate\Http\Request;
 use App\Http\Resources\ClientResource;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Validator;
 
 
@@ -41,6 +40,7 @@ class ClientController extends Controller
             "rif" => "required|max:14",
             "email" => "required|email",
             "phone" => "required|numeric",
+            "is_supplier" => "boolean",
         ]);
 
         if($validator->fails()){
@@ -86,6 +86,7 @@ class ClientController extends Controller
             "rif" => "required|max:14",
             "email" => "required|email",
             "phone" => "required|numeric",
+            "is_supplier" => "boolean",
         ]);
 
         if($validator->fails()){

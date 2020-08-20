@@ -69,5 +69,9 @@ Route::middleware('auth:api')->group(function () {
      */
     Route::apiResource('/clients', 'ClientController');
 
+    /**
+     * Supplier Module
+     */
+    Route::apiResource('/suppliers', 'SupplierController');
 
 });
