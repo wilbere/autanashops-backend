@@ -7,6 +7,7 @@ use App\User;
 use Auth;
 use Illuminate\Http\Request;
 use App\Http\Resources\UserResource;
+use App\Http\Resources\AccountResource;
 use App\Http\Requests\AccountRequest;
 use Illuminate\Support\Facades\Validator;
 
@@ -27,12 +28,7 @@ class AccountController extends Controller
      */
     public function index()
     {
-        $user = Auth::user();
-        if ($user->account != null) {
-            return response()->json([new UserResource($user), 200]);
-        } else {
-            return response()->json([$user, 200]);
-        }
+        return response()->json([new AccountResource($this->account), 200]);
     }
 
     /**
@@ -41,9 +37,8 @@ class AccountController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(AccountRequest $request)
+    public function store(AccountRequest $request, User $user)
     {
-        $user = Auth::user();
 
         $validator = Validator::make($request->all(),[
             'name' => 'required',
@@ -84,9 +79,7 @@ class AccountController extends Controller
      */
     public function show(Account $account)
     {
-        $user = Auth::user();
-
-        return response()->json(['Created Success', new UserResource($user), 200]);
+        return response()->json([new AccountResource($account), 200]);
     }
 
     /**
@@ -98,7 +91,7 @@ class AccountController extends Controller
      */
     public function update(Request $request, Account $account)
     {
-        $user = Auth::user();
+        // $user = Auth::user();
 
         $validator = Validator::make($request->all(),[
             'name' => 'required',
@@ -124,10 +117,11 @@ class AccountController extends Controller
             $account->address = $request->address;
             $account->city = $request->city;
             $account->country = $request->country;
+            $account->save();
 
-            $user->account()->save($account);
+            // $user->account()->save($account);
 
-            return response()->json(['Updated Success', new UserResource($user), 200]);
+            return response()->json(['Updated Success', new AccountResource($account), 200]);
         }
     }
 

@@ -8,6 +8,7 @@ use App\Http\Requests\UserRegisterRequest;
 use App\Http\Requests\UserLoginRequest;
 use Laravel\Passport\Client;
 use App\User;
+use App\Image;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
@@ -42,7 +43,7 @@ class AuthController extends Controller
 
     public function register(UserRegisterRequest $request)
     {
-        if ($validated = $request->validate()) {
+        if ($validated = $request->validated()) {
 
             $user = User::create([
                 "name" => $request->name,
@@ -51,6 +52,11 @@ class AuthController extends Controller
                 "password" => Hash::make($request->password)
             ]);
 
+            $image = new Image();
+            $image->url = "https://cultura-sorda.org/wp-content/uploads/2015/02/Usuario-Vacio1.png";
+
+            $user->image()->save($image);
+
             $token = $user->createToken('Autanashops')->accessToken;
 
             return response()->json([
@@ -58,6 +64,7 @@ class AuthController extends Controller
                 'token' => $token,
                 'message' => 'Usuario Registrado con exito'
             ], 200);
+
         } else {
 
             $errors = $validated->errors();

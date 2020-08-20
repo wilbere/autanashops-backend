@@ -23,43 +23,51 @@ Route::middleware('auth:api')->group(function () {
     /**
      * User Module
      */
-    Route::apiResource('/user', 'UserController');
+    Route::apiResource('/users', 'UserController');
 
     /**
      * Category Module
      */
-    Route::apiResource('/category', 'CategoryController');
+    Route::apiResource('/categories', 'CategoryController');
 
     /**
      * Tax Module
      */
-    Route::apiResource('/tax', 'TaxController');
+    Route::apiResource('/taxes', 'TaxController');
 
     /**
      * Brand Module
      */
-    Route::apiResource('/brand', 'BrandController');
+    Route::apiResource('/brands', 'BrandController');
 
 
     /**
      * Currency Module
      */
-    Route::apiResource('/currency', 'CurrencyController');
+    Route::apiResource('/currencies', 'CurrencyController');
 
 
     /**
      * Unit Module
      */
-    Route::apiResource('/unit', 'UnitController');
+    Route::apiResource('/units', 'UnitController');
 
 
     /**
      * Warehouse Module
      */
-    Route::apiResource('/warehouse', 'WarehouseController');
+    Route::apiResource('/warehouses', 'WarehouseController');
 
     /**
      * Account Module
      */
     Route::apiResource('/account', 'AccountController');
+    Route::post('/account/{user}', 'AccountController@store')->name('account.store');
+
+    /**
+     * Client Module
+     */
+    Route::apiResource('/clients', 'ClientController');
+
+
 });

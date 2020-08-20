@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\User;
 use Illuminate\Http\Request;
 use App\Http\Resources\UserResource;
+use App\Http\Resources\UserCollection;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -23,8 +25,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        $user = $this->user->find(auth()->user()->id);
-        return response()->json(new UserResource($user));
+        $users = $this->user->get();
+        return UserResource::collection($users);
     }
 
     /**
@@ -35,7 +37,53 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(),[
+            "name" => "required",
+            "username" => "required",
+            "email" => "required|email",
+            "password" => "required"
+        ]);
+
+        if (!$validator->fails()) {
+
+            $user = User::create([
+                "name" => $request->name,
+                "username" => $request->username,
+                "email" => $request->email,
+                "password" => Hash::make($request->password)
+            ]);
+
+            $image = new Image();
+            if($request->url_img) {
+                $image->url = $request->url_img;
+            } else {
+                $image->url = "https://cultura-sorda.org/wp-content/uploads/2015/02/Usuario-Vacio1.png";
+            }
+
+            $user->image()->save($image);
+
+            return response()->json([
+                'res' => true,
+                'message' => 'Usuario Registrado con exito'
+            ], 200);
+
+        } else {
+
+            $errors = $validated->errors();
+
+            $data = [
+                "name" => $errors-first('name'),
+                "username" => $errors-first('username'),
+                "email" => $errors-first('email'),
+                "password" => $errors-first('password'),
+            ];
+
+            return response()->json([
+                'res' => true,
+                'err' => $data,
+            ], 422);
+
+        }
     }
 
     /**
@@ -46,7 +94,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        //
+        return response()->json([new UserResource($user), 200]);
     }
 
     /**
@@ -58,7 +106,13 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        //
+        $validator = Validator::make($request->all(),[
+            "name" => "required",
+            "username" => "required",
+            "email" => "required|email",
+        ]);
+
+
     }
 
     /**
@@ -69,6 +123,7 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        //
+        $user->delete();
+        return response()->json(['Delete Success', 200]);
     }
 }
