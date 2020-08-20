@@ -17,7 +17,7 @@ class Product extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'cost', 'price', 'barcode', 'description'
+        'name', 'cost', 'price', 'barcode', 'description', 'alert_qty'
     ];
 
     public function brand()
@@ -32,12 +32,12 @@ class Product extends Model
 
     public function units()
     {
-        return $this->belongsToMany(Unit::class);
+        return $this->belongsToMany(Unit::class, 'units_products');
     }
 
     public function warehouses()
     {
-        return $this->belongsToMany(Warehouse::class)
+        return $this->belongsToMany(Warehouse::class, 'warehouses_products')
                     ->using(WarehouseProduct::class)
                     ->withPivot([
                         'qty'

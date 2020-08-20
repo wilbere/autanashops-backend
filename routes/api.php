@@ -74,4 +74,9 @@ Route::middleware('auth:api')->group(function () {
      */
     Route::apiResource('/suppliers', 'SupplierController');
 
+    /**
+     * Product Module
+     */
+    Route::apiResource('/products', 'ProductController');
+
 });
