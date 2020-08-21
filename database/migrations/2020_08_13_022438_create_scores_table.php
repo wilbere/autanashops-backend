@@ -20,7 +20,7 @@ class CreateScoresTable extends Migration
             $table->string('name');
             $table->string('balance');
             $table->boolean('default');
-            $table->text('note');
+            $table->text('note')->nullable();
 
             $table->softDeletes();
             $table->timestamps();

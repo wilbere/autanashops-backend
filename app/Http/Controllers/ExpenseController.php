@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 
 class ExpenseController extends Controller
 {
+
+
+
     /**
      * Display a listing of the resource.
      *
@@ -59,6 +62,7 @@ class ExpenseController extends Controller
      */
     public function destroy(Expense $expense)
     {
-        //
+        $score->delete();
+        return response()->json(["Delete Success",  200]);
     }
 }

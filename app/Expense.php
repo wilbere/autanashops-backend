@@ -27,4 +27,9 @@ class Expense extends Model
     {
         return $this->belongsTo(Score::class);
     }
+
+    public function warehouse()
+    {
+        return $this->belongsTo(Warehouse::class);
+    }
 }

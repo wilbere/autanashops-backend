@@ -79,4 +79,9 @@ Route::middleware('auth:api')->group(function () {
      */
     Route::apiResource('/products', 'ProductController');
 
+    /**
+     * Scores Module
+     */
+    Route::apiResource('/scores', 'ScoreController');
+
 });

@@ -27,4 +27,10 @@ class Warehouse extends Model
                         'qty'
                     ]);
     }
+
+    public function expenses()
+    {
+        return $this->hasMany(Expense::class);
+    }
+
 }
