@@ -83,5 +83,12 @@ Route::middleware('auth:api')->group(function () {
      * Scores Module
      */
     Route::apiResource('/scores', 'ScoreController');
+    Route::get('/scores/activate/{score}', 'ScoreController@activatedScore')->name('activated.score');
+
+
+    /**
+     * Expense Module
+     */
+    Route::apiResource('/expenses', 'ExpenseController');
 
 });
