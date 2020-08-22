@@ -44,6 +44,11 @@ class Product extends Model
                     ]);
     }
 
+    public function purchases()
+    {
+        return $this->belongsToMany(Purchase::class);
+    }
+
     public function tax()
     {
         return $this->belongsTo(Tax::class);

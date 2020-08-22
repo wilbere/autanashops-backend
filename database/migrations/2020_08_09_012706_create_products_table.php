@@ -22,7 +22,8 @@ class CreateProductsTable extends Migration
             $table->string('cost');
             $table->string('price');
             $table->string('barcode')->unique();
-            $table->text('description');
+            $table->text('description')->nullable();
+            $table->string('alert_qty');
 
             $table->softDeletes();
             $table->timestamps();

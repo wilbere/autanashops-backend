@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddAlertQtyToProductsTable extends Migration
+class CreateStatuablesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,15 @@ class AddAlertQtyToProductsTable extends Migration
      */
     public function up()
     {
-        Schema::table('products', function (Blueprint $table) {
-            $table->string('alert_qty')->nullable();
+        Schema::create('statuables', function (Blueprint $table) {
+            $table->id();
+
+            $table->unsignedBigInteger('status_id')->unsigned();
+
+            $table->date('date')->nullable();
+            $table->morphs('statuable');
+
+            $table->timestamps();
         });
     }
 
@@ -25,8 +32,6 @@ class AddAlertQtyToProductsTable extends Migration
      */
     public function down()
     {
-        Schema::table('products', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('statuable');
     }
 }

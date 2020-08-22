@@ -26,7 +26,7 @@ class CreateExpensesWarehousesTable extends Migration
 
             $table->foreign('warehouse_id')->references('id')->on('warehouses');
 
-            $table->foreign('expense_id')->references('id')->on('products');
+            $table->foreign('expense_id')->references('id')->on('expenses');
         });
     }
 

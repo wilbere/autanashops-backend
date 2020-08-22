@@ -29,7 +29,7 @@ class DatabaseSeeder extends Seeder
         $this->call(UnitSeeder::class);
         $this->call(WarehouseSeeder::class);
         $this->call(ImageSeeder::class);
-
+        $this->call(StatusSeeder::class);
 
     }
 }

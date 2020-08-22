@@ -23,7 +23,7 @@ class SupplierController extends Controller
      */
     public function index()
     {
-        return supplierResource::collection($this->supplier->get());
+        return supplierResource::collection($this->supplier->where("is_supplier", true)->get());
     }
 
     /**
