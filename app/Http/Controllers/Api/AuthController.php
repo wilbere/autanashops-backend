@@ -10,6 +10,7 @@ use Laravel\Passport\Client;
 use App\User;
 use App\Image;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
@@ -28,6 +29,7 @@ class AuthController extends Controller
             return response()->json([
                 'res' => true,
                 'token' => $token,
+                'user' => auth()->user(),
                 'message' => 'Bienvenido al sistema'
             ], 200);
 
@@ -41,9 +43,17 @@ class AuthController extends Controller
         }
     }
 
-    public function register(UserRegisterRequest $request)
+    public function register(Request $request)
     {
-        if ($validated = $request->validated()) {
+        $validator = Validator::make($request->all(),[
+            "name" => 'required',
+            "username" => 'required',
+            "email" => "email|required|unique:users",
+            "password" => "required",
+            "confirm_password" => 'same:password'
+        ]);
+
+        if (!$validator->fails()) {
 
             $user = User::create([
                 "name" => $request->name,
@@ -62,25 +72,24 @@ class AuthController extends Controller
             return response()->json([
                 'res' => true,
                 'token' => $token,
+                'user' => $user,
                 'message' => 'Usuario Registrado con exito'
             ], 200);
 
         } else {
 
-            $errors = $validated->errors();
-
-            $data = [
-                "name" => $errors-first('name'),
-                "username" => $errors-first('username'),
-                "email" => $errors-first('email'),
-                "password" => $errors-first('password'),
+            $errors = [
+                'email' => $validator->errors()->first('email'),
+                'name' => $validator->errors()->first('name'),
+                'username' => $validator->errors()->first('username'),
+                'password' => $validator->errors()->first('password'),
+                'confirm_password' => $validator->errors()->first('confirm_password')
             ];
 
             return response()->json([
-                'res' => true,
-                'err' => $data,
-            ], 422);
-
+                'res' => false,
+                'errors' => $errors
+            ], 200);
         }
 
     }
