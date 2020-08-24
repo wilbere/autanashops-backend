@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\UserRegisterRequest;
 use App\Http\Requests\UserLoginRequest;
+use App\Http\Resources\UserResource;
 use Laravel\Passport\Client;
 use App\User;
 use App\Image;
@@ -29,7 +30,7 @@ class AuthController extends Controller
             return response()->json([
                 'res' => true,
                 'token' => $token,
-                'user' => auth()->user(),
+                'user' => new UserResource(auth()->user()),
                 'message' => 'Bienvenido al sistema'
             ], 200);
 
@@ -72,7 +73,7 @@ class AuthController extends Controller
             return response()->json([
                 'res' => true,
                 'token' => $token,
-                'user' => $user,
+                'user' => new UserResource($user),
                 'message' => 'Usuario Registrado con exito'
             ], 200);
 

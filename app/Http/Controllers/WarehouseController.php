@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Warehouse;
+use App\Http\Resources\WarehouseResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -22,7 +23,7 @@ class WarehouseController extends Controller
      */
     public function index()
     {
-        return response()->json([$this->warehouse->get(), 200]);
+        return response()->json([ WarehouseResource::collection($this->warehouse->get()), 200]);
     }
 
     /**

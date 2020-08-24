@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Resources\ProductResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class WarehouseResource extends JsonResource
@@ -14,6 +15,13 @@ class WarehouseResource extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return [
+            "id" => $this->id,
+            "name" => $this->name,
+            "address" => $this->address,
+            "phone" => $this->phone,
+            "email" => $this->email,
+            "products" => ProductResource::collection($this->products)
+        ];
     }
 }
