@@ -62,4 +62,9 @@ class User extends Authenticatable
         return $this->morphMany(Order::class, "orderable");
     }
 
+    public function warehouses()
+    {
+        return $this->hasMany(Warehouse::class);
+    }
+
 }

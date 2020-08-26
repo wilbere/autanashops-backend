@@ -56,6 +56,7 @@ Route::middleware('auth:api')->group(function () {
     /**
      * Warehouse Module
      */
+    Route::get('/warehouses/attendants', 'WarehouseController@attendants');
     Route::apiResource('/warehouses', 'WarehouseController');
 
     /**

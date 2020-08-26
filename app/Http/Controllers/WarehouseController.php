@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Warehouse;
+use App\User;
 use App\Http\Resources\WarehouseResource;
+use App\Http\Resources\AttendantResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -23,7 +25,7 @@ class WarehouseController extends Controller
      */
     public function index()
     {
-        return response()->json([ WarehouseResource::collection($this->warehouse->get()), 200]);
+        return  WarehouseResource::collection($this->warehouse->get());
     }
 
     /**
@@ -34,6 +36,9 @@ class WarehouseController extends Controller
      */
     public function store(Request $request)
     {
+
+        $user = User::find($request->attendant);
+
         $validator = Validator::make($request->all(), [
             "name" => 'required',
             "email" => 'required|email',
@@ -49,9 +54,10 @@ class WarehouseController extends Controller
             $this->warehouse->email = $request->email;
             $this->warehouse->phone = $request->phone;
             $this->warehouse->address = $request->address;
+            $this->warehouse->user()->associate($user);
             $this->warehouse->save();
 
-            return response()->json(['Created Success', $this->warehouse, 200]);
+            return response()->json(['Created Success', new WarehouseResource($this->warehouse), 200]);
         }
     }
 
@@ -75,24 +81,35 @@ class WarehouseController extends Controller
      */
     public function update(Request $request, Warehouse $warehouse)
     {
+        $user = User::find($request->attendant);
+
         $validator = Validator::make($request->all(), [
             "name" => 'required',
             "email" => 'required|email',
             "phone" => 'required|numeric',
             "address" => 'required'
-        ]);
+            ]);
 
-        if ($validator->fails()) {
-            return response()->json(['Error', $validator->errors()->all(),200]);
-        } else {
+            if ($validator->fails()) {
+                return response()->json([
+                    'res' => false,
+                    'error' => $validator->errors()->first(),
+                    200
+                ]);
+            } else {
 
-            $this->warehouse->name = $request->name;
-            $this->warehouse->email = $request->email;
-            $this->warehouse->phone = $request->phone;
-            $this->warehouse->address = $request->address;
-            $this->warehouse->save();
+            $warehouse->name = $request->name;
+            $warehouse->email = $request->email;
+            $warehouse->phone = $request->phone;
+            $warehouse->address = $request->address;
+            $warehouse->user()->associate($user);
+            $warehouse->save();
 
-            return response()->json(['Created Success', $this->warehouse, 200]);
+            return response()->json([
+                    'res' => true,
+                    'data'=> $warehouse,
+                    200
+                ]);
         }
     }
 
@@ -106,5 +123,29 @@ class WarehouseController extends Controller
     {
         $warehouse->delete();
         return response()->json(['Delete Success', 200]);
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function attendants()
+    {
+        $attendants = User::get();
+        return response()->json(['attendants' => AttendantResource::collection($attendants)]);
+    }
+
+
+    /**
+     * Update the specified resource from storage.
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @param  \App\Warehouse $warehouse
+     * @return \Illuminate\Http\Response
+     */
+    public function updateAtendant(Request $request, Warehouse $warehouse)
+    {
+
     }
 }

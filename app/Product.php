@@ -38,10 +38,7 @@ class Product extends Model
     public function warehouses()
     {
         return $this->belongsToMany(Warehouse::class, 'warehouses_products')
-                    ->using(WarehouseProduct::class)
-                    ->withPivot([
-                        'qty'
-                    ]);
+                    ->withPivot('qty');
     }
 
     public function purchases()

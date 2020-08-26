@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Http\Resources\ProductResource;
+use App\Http\Resources\UserResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class WarehouseResource extends JsonResource
@@ -21,7 +22,8 @@ class WarehouseResource extends JsonResource
             "address" => $this->address,
             "phone" => $this->phone,
             "email" => $this->email,
-            "products" => ProductResource::collection($this->products)
+            "products" => $this->products,
+            "attendant" => new UserResource($this->user)
         ];
     }
 }

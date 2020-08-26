@@ -18,7 +18,6 @@ class CreateUnitsProductsTable extends Migration
             $table->unsignedBigInteger('unit_id')->unsigned();
             $table->unsignedBigInteger('product_id')->unsigned();
 
-            $table->string('value');
 
             $table->softDeletes();
             $table->timestamps();

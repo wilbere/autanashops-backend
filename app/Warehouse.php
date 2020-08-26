@@ -22,15 +22,17 @@ class Warehouse extends Model
     public function products()
     {
         return $this->belongsToMany(Product::class, 'warehouses_products')
-                    ->using(WarehouseProduct::class)
-                    ->withPivot([
-                        'qty'
-                    ]);
+                    ->withPivot('qty');
     }
 
     public function expenses()
     {
         return $this->hasMany(Expense::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 
 }

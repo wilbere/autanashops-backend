@@ -22,12 +22,11 @@ class ProductResource extends JsonResource
             "cost" => $this->cost,
             "price" => $this->price,
             "description" => $this->description,
-            "images" => new ImageResource($this->images),
+            "images" => ImageResource::collection($this->images),
             "tax" => $this->tax,
             "category" => $this->category,
             "brand" => $this->brand,
             "units" => $this->units,
-            "warehouses" => new WarehouseResource($this->warehouses),
             "tags" => $this->tags
         ];
     }
