@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Brand;
+use App\Image;
+use App\Http\Resources\BrandResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 
 class BrandController extends Controller
 {
@@ -23,7 +26,9 @@ class BrandController extends Controller
      */
     public function index()
     {
-        return $this->brand->get();
+        return response()->json([
+            'brands' => BrandResource::collection($this->brand->get())
+        ]);
     }
 
     /**
@@ -41,14 +46,21 @@ class BrandController extends Controller
 
         if ($validator->fails()) {
 
-            return response()->json(['Error', $validator->errors()->all(),200]);
+            return response()->json([
+                'res' => false,
+                'Error' => $validator->errors()->first(),
+                200
+            ]);
 
         } else {
 
             $this->brand->name = $request->name;
             $this->brand->save();
 
-            return response()->json(['Created Success', $this->brand, 200]);
+            return response()->json([
+                'res' => true,
+                200
+            ]);
         }
 
     }
@@ -74,19 +86,34 @@ class BrandController extends Controller
     public function update(Request $request, Brand $brand)
     {
         $validator = Validator::make($request->all(),[
-            'name' => 'required'
+            'name' => 'required',
         ]);
 
         if ($validator->fails()) {
 
-            return response()->json(['Error', $validator->errors()->all(),200]);
+            return response()->json([
+                'res' => false,
+                'Error' => $validator->errors()->first(),
+                200
+            ]);
 
         }
+
+        // if ($request->input('image')) {
+        //     $path = Storage::disk('public')->put('/img', $request->input('image'));
+        //     $image = Image::find($request->image_id);
+        //     $image->url = asset($path);
+        //     $image->save();
+        // }
+
 
         $brand->name = $request->name;
         $brand->save();
 
-        return response()->json(['updated success', $brand, 200]);
+        return response()->json([
+            'res' => true,
+            200
+        ]);
     }
 
     /**

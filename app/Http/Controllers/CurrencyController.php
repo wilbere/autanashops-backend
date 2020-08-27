@@ -23,7 +23,7 @@ class CurrencyController extends Controller
      */
     public function index()
     {
-        return response()->json([$this->currency->get(), 200]);
+        return response()->json(['currencies' => $this->currency->get(), 200]);
     }
 
     /**
@@ -42,7 +42,12 @@ class CurrencyController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['Error', $validator->errors()->all(),200]);
+
+            return response()->json([
+                'res' => false,
+                'error' => $validator->errors()->first(),
+                200]);
+
         } else {
 
             $this->currency->name = $request->name;
@@ -51,7 +56,14 @@ class CurrencyController extends Controller
             $this->currency->default = $request->default;
             $this->currency->save();
 
-            return response()->json(['Created Success', $this->currency, 200]);
+            if($request->default == true) {
+                $this->activatedCurrency($this->currency);
+            }
+
+            return response()->json([
+                'res' => true, 
+                200
+            ]);
         }
     }
 
@@ -83,7 +95,12 @@ class CurrencyController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['Error', $validator->errors()->all(),200]);
+
+            return response()->json([
+                'res' => false,
+                'error' => $validator->errors()->first(),
+                200]);
+
         } else {
 
             $currency->name = $request->name;
@@ -92,7 +109,14 @@ class CurrencyController extends Controller
             $currency->default = $request->default;
             $currency->save();
 
-            return response()->json(['Updated Success', $currency, 200]);
+            if($request->default == true) {
+                $this->activatedCurrency($currency);
+            }
+
+            return response()->json([
+                'res' => true, 
+                200
+            ]);
         }
     }
 
@@ -105,6 +129,29 @@ class CurrencyController extends Controller
     public function destroy(Currency $currency)
     {
         $currency->delete();
-        return response()->json(['Delete Success', 200]);
+        return response()->json(['res' => true]);
+    }
+
+
+    /**
+     * Activated currency default.
+     *
+     * @param  \App\Currency  $currency
+     * @return \Illuminate\Http\Response
+     */
+    public function activatedCurrency(Currency $currency)
+    {
+        $currencies = $this->currency->where("default", true)->get();
+
+        foreach ($currencies as $cur) {
+            $cur->default = false;
+            $cur->save();
+        }
+
+        $currency->default = true;
+        $currency->save();
+
+        return response()->json(['res' => true]);
+
     }
 }

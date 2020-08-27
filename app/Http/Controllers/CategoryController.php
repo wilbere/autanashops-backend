@@ -4,8 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Category;
 use Illuminate\Http\Request;
-use App\Http\Requests\CategoryRequest;
-
+use Illuminate\Support\Facades\Validator;
 
 class CategoryController extends Controller
 {
@@ -27,23 +26,44 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        return response()->json([$this->category->get(), 200]);
+        return response()->json([
+            'categories' => $this->category->get()
+            ]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\CategoryRequest  $request
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CategoryRequest $request)
+    public function store(Request $request)
     {
+        $validator = Validator::make($request->all(),[
+            'name' => 'required',
+            'description' => 'required',
+        ]);
 
-        $this->category->name = $request->name;
-        $this->category->description = $request->description;
-        $this->category->save();
+        if ($validator->fails()) {
 
-        return response()->json(['Created Success', $this->category, 200]);
+            return response()->json([
+                'res' => false,
+                'Error' => $validator->errors()->first(),
+                200
+            ]);
+
+        } else {
+
+            $this->category->name = $request->name;
+            $this->category->description = $request->description;
+            $this->category->save();
+    
+            return response()->json([
+                'res' => true,
+                200
+            ]);
+
+        }
 
     }
 
@@ -65,13 +85,33 @@ class CategoryController extends Controller
      * @param  \App\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function update(CategoryRequest $request, Category $category)
+    public function update(Request $request, Category $category)
     {
-        $category->name = $request->name;
-        $category->description = $request->description;
-        $category->save();
+        $validator = Validator::make($request->all(),[
+            'name' => 'required',
+            'description' => 'required',
+        ]);
 
-        return response()->json(['updated success', $category, 200]);
+        if ($validator->fails()) {
+
+            return response()->json([
+                'res' => false,
+                'Error' => $validator->errors()->first(),
+                200
+            ]);
+
+        } else {
+
+            $category->name = $request->name;
+            $category->description = $request->description;
+            $category->save();
+    
+            return response()->json([
+                'res' => true,
+                200
+            ]);
+
+        }
     }
 
     /**

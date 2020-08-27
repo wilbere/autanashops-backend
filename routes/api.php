@@ -45,6 +45,7 @@ Route::middleware('auth:api')->group(function () {
      * Currency Module
      */
     Route::apiResource('/currencies', 'CurrencyController');
+    Route::get('/currencies/activate/{currency}', 'CurrencyController@activatedCurrency')->name('activated.score');
 
 
     /**
