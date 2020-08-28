@@ -25,7 +25,7 @@ class WarehouseController extends Controller
      */
     public function index()
     {
-        return  WarehouseResource::collection($this->warehouse->get());
+        return  response()->json(['warehouses' => WarehouseResource::collection($this->warehouse->get())]);
     }
 
     /**
@@ -47,7 +47,11 @@ class WarehouseController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['Error', $validator->errors()->all(),200]);
+            return response()->json([
+                'res' => false,
+                'error' => $validator->errors()->first(),
+                200
+            ]);
         } else {
 
             $this->warehouse->name = $request->name;
@@ -57,7 +61,10 @@ class WarehouseController extends Controller
             $this->warehouse->user()->associate($user);
             $this->warehouse->save();
 
-            return response()->json(['Created Success', new WarehouseResource($this->warehouse), 200]);
+            return response()->json([
+                'res' => true,
+                200
+            ]);;
         }
     }
 
@@ -106,10 +113,9 @@ class WarehouseController extends Controller
             $warehouse->save();
 
             return response()->json([
-                    'res' => true,
-                    'data'=> $warehouse,
-                    200
-                ]);
+                'res' => true,
+                200
+            ]);
         }
     }
 

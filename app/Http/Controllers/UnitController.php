@@ -23,7 +23,7 @@ class UnitController extends Controller
      */
     public function index()
     {
-        return response()->json([$this->unit->get(), 200]);
+        return response()->json(['units' => $this->unit->get(), 200]);
     }
 
     /**
@@ -51,7 +51,10 @@ class UnitController extends Controller
             $this->unit->description = $request->description;
             $this->unit->save();
 
-            return response()->json(['Created Success', $this->unit, 200]);
+            return response()->json([
+                'res' => true,
+                200
+            ]);
         }
     }
 
@@ -83,7 +86,11 @@ class UnitController extends Controller
 
         if ($validator->fails()) {
 
-            return response()->json(['Error', $validator->errors()->all(),200]);
+            return response()->json([
+                'res' => false,
+                'error' => $validator->errors()->first(),
+                200
+            ]);
 
         } else {
 
@@ -92,7 +99,10 @@ class UnitController extends Controller
             $unit->description = $request->description;
             $unit->save();
 
-            return response()->json(['Created Success', $unit, 200]);
+            return response()->json([
+                'res' => true,
+                200
+            ]);
         }
     }
 
