@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Resources\UserResource;
 use App\Http\Resources\UserCollection;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -94,7 +95,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        return response()->json([new UserResource($user), 200]);
+        return response()->json(['user' => new UserResource($user), 200]);
     }
 
     /**
@@ -112,6 +113,28 @@ class UserController extends Controller
             "email" => "required|email",
         ]);
 
+        if ($validator->fails()){
+
+            return response()->json([
+                'res' => true,
+                'error' => $validator->errors()->first(),
+                200
+            ]);
+
+        } else {
+
+            $user->name = $request->name;
+            $user->username = $request->username;
+            $user->email = $request->email;
+            $user->save();
+
+            return response()->json([
+                'res' => true,
+                200
+            ]);
+
+        }
+
 
     }
 
@@ -125,5 +148,44 @@ class UserController extends Controller
     {
         $user->delete();
         return response()->json(['Delete Success', 200]);
+    }
+
+    public function changePassword(Request $request, User $user)
+    {
+        $validator = Validator::make($request->all(), [
+            "old_password" => "required",
+            "password" => "required",
+            "confirm_password" => 'same:password'
+        ]);
+
+        if ($validator->fails()){
+
+            return response()->json([
+                'res' => false,
+                'error' => $validator->errors()->first(),
+                200
+            ]);
+
+        } else {
+
+            if(Hash::check($request->old_password,  auth()->user()->password)){
+                $user->password = Hash::make($request->password);
+                $user->save();
+
+                return response()->json([
+                    'res' => true,
+                    200
+                ]);
+            } else {
+
+                return response()->json([
+                    'res' => false,
+                    'error' => 'Incorrect password'
+                ]);
+
+            }
+
+        }
+
     }
 }

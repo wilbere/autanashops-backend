@@ -24,7 +24,7 @@ Route::middleware('auth:api')->group(function () {
      * User Module
      */
     Route::apiResource('/users', 'UserController');
-
+    Route::put('/users/change-password/{user}', 'UserController@changePassword');
     /**
      * Category Module
      */

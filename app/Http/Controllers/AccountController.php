@@ -53,7 +53,7 @@ class AccountController extends Controller
 
         if ($validator->fails()) {
 
-            return response()->json(['Error', $validator->errors()->all(),200]);
+            return response()->json(['res' => false, 'error' => $validator->errors()->first()]);
 
         } else {
 
@@ -67,7 +67,7 @@ class AccountController extends Controller
 
             $user->account()->save($this->account);
 
-            return response()->json(['Created Success', new UserResource($user), 200]);
+            return response()->json(['res' => true, 200]);
         }
     }
 
@@ -106,7 +106,7 @@ class AccountController extends Controller
 
         if ($validator->fails()) {
 
-            return response()->json(['Error', $validator->errors()->all(),200]);
+            return response()->json(['res' => false, 'error' => $validator->errors()->first()]);
 
         } else {
 
@@ -121,7 +121,7 @@ class AccountController extends Controller
 
             // $user->account()->save($account);
 
-            return response()->json(['Updated Success', new AccountResource($account), 200]);
+            return response()->json(['res' => true, 200]);
         }
     }
 
