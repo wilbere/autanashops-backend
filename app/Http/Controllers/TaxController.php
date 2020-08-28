@@ -23,7 +23,7 @@ class TaxController extends Controller
      */
     public function index()
     {
-        return response()->json([$this->tax->get(), 200]);
+        return response()->json(['taxes' => $this->tax->get(), 200]);
     }
 
     /**
@@ -40,14 +40,21 @@ class TaxController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['Error', $validator->errors()->all(),200]);
+            return response()->json([
+                'res' => false,
+                'error' => $validator->errors()->first(),
+                200
+            ]);
         } else {
 
             $this->tax->name = $request->name;
             $this->tax->rate = $request->rate;
             $this->tax->save();
 
-            return response()->json(['Created Success', $this->tax, 200]);
+            return response()->json([
+                'res' => true,
+                200
+            ]);
         }
 
     }
@@ -78,14 +85,21 @@ class TaxController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['Error', $validator->errors()->all(),200]);
+            return response()->json([
+                'res' => false,
+                'error' => $validator->errors()->first(),
+                200
+            ]);
         } else {
 
-            $this->tax->name = $request->name;
-            $this->tax->rate = $request->rate;
-            $this->tax->save();
+            $tax->name = $request->name;
+            $tax->rate = $request->rate;
+            $tax->save();
 
-            return response()->json(['Update Success', $this->tax, 200]);
+            return response()->json([
+                'res' => true,
+                200
+            ]);
         }
     }
 

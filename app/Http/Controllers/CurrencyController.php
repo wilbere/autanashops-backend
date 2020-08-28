@@ -38,7 +38,7 @@ class CurrencyController extends Controller
             "name" => 'required',
             "symbol" => 'required',
             "value" => 'required',
-            "default" => 'required|boolean'
+            "default" => 'boolean'
         ]);
 
         if ($validator->fails()) {
@@ -50,18 +50,19 @@ class CurrencyController extends Controller
 
         } else {
 
+
             $this->currency->name = $request->name;
             $this->currency->symbol = $request->symbol;
             $this->currency->value = $request->value;
             $this->currency->default = $request->default;
-            $this->currency->save();
+            // $currency = $this->currency->save();
 
             if($request->default == true) {
                 $this->activatedCurrency($this->currency);
             }
 
             return response()->json([
-                'res' => true, 
+                'res' => true,
                 200
             ]);
         }
@@ -114,7 +115,7 @@ class CurrencyController extends Controller
             }
 
             return response()->json([
-                'res' => true, 
+                'res' => true,
                 200
             ]);
         }
