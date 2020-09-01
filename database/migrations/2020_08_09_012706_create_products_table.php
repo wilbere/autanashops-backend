@@ -18,6 +18,7 @@ class CreateProductsTable extends Migration
             $table->unsignedBigInteger('brand_id')->unsigned();
             $table->unsignedBigInteger('tax_id')->unsigned();
 
+            $table->string('type');
             $table->string('name');
             $table->string('cost');
             $table->string('price');

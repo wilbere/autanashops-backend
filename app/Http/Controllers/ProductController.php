@@ -42,6 +42,7 @@ class ProductController extends Controller
         $category = Category::find($request->category);
         $unit = Unit::find($request->unit);
 
+        $this->product->type = $request->type;
         $this->product->name = $request->name;
         $this->product->barcode = $request->barcode;
         $this->product->cost = $request->cost;
@@ -100,6 +101,7 @@ class ProductController extends Controller
         $category = Category::find($request->category);
         $unit = Unit::find($request->unit);
 
+        $product->type = $request->type;
         $product->name = $request->name;
         $product->barcode = $request->barcode;
         $product->cost = $request->cost;

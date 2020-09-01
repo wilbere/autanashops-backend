@@ -23,7 +23,7 @@ class ScoreController extends Controller
      */
     public function index()
     {
-        return response()->json([$this->score->get(), 200]);
+        return response()->json(['scores' => $this->score->get(), 200]);
     }
 
     /**
@@ -35,7 +35,7 @@ class ScoreController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(),[
-            "account_no" => "required|numeric|min:20|unique:scores",
+            "account_no" => "required|numeric|unique:scores",
             "name" => "required",
             "balance" => "required|numeric",
             "default" => "required|boolean",
@@ -43,21 +43,21 @@ class ScoreController extends Controller
         ]);
 
         if($validator->fails()){
-            return response()->json(["Error", $validator->errors()->all(), 200]);
+            return response()->json(['res' => false,"error" => $validator->errors()->first(), 200]);
         } else {
+
+            if($request->default == true) {
+                $this->desactivatedScore();
+            }
 
             $this->score->account_no = $request->account_no;
             $this->score->name = $request->name;
             $this->score->balance = $request->balance;
             $this->score->default = $request->default;
             $this->score->note = $request->note;
-
-            if($request->default == true) {
-                $this->activatedScore($this->score);
-            }
             $this->score->save();
 
-            return response()->json(["Created Success", $this->score, 200]);
+            return response()->json(["res" => true, 200]);
 
         }
     }
@@ -83,7 +83,7 @@ class ScoreController extends Controller
     public function update(Request $request, Score $score)
     {
         $validator = Validator::make($request->all(),[
-            "account_no" => "required|numeric|min:20|unique:scores",
+            "account_no" => "required|numeric",
             "name" => "required",
             "balance" => "required|numeric",
             "default" => "required|boolean",
@@ -91,8 +91,12 @@ class ScoreController extends Controller
         ]);
 
         if($validator->fails()){
-            return response()->json(["Error", $validator->errors()->all(), 200]);
+            return response()->json(['res' => false,"error" => $validator->errors()->first(), 200]);
         } else {
+
+            if($request->default == true) {
+                $this->desactivatedScore();
+            }
 
             $score->account_no = $request->account_no;
             $score->name = $request->name;
@@ -101,11 +105,8 @@ class ScoreController extends Controller
             $score->note = $request->note;
             $score->save();
 
-            if($request->default == true) {
-                $this->activatedScore($score);
-            }
 
-            return response()->json(["Updated Success", $score, 200]);
+            return response()->json(["res" => true, 200]);
 
         }
     }
@@ -123,7 +124,7 @@ class ScoreController extends Controller
 
     }
 
-    public function activatedScore(Score $score)
+    public function desactivatedScore()
     {
         $scores = $this->score->where("default", true)->get();
 
@@ -131,10 +132,6 @@ class ScoreController extends Controller
             $scr->default = false;
             $scr->save();
         }
-
-        $score->default = true;
-        $score->save();
-
         return response()->json(['score activated', 200]);
 
     }
