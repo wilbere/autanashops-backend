@@ -55,7 +55,7 @@ class CurrencyController extends Controller
             $this->currency->symbol = $request->symbol;
             $this->currency->value = $request->value;
             $this->currency->default = $request->default;
-            // $currency = $this->currency->save();
+            $currency = $this->currency->save();
 
             if($request->default == true) {
                 $this->activatedCurrency($this->currency);
@@ -129,8 +129,23 @@ class CurrencyController extends Controller
      */
     public function destroy(Currency $currency)
     {
-        $currency->delete();
-        return response()->json(['res' => true]);
+        $count = $this->currency->count();
+        if($count == 1) {
+
+            return response()->json(['res' => false, 'error' => 'No se puede eliminar la última moneda.', 200]);
+
+        } else {
+
+            if($currency->default){
+                return response()->json(['res' => false, 'error' => 'No se puede eliminar la moneda por defecto.', 200]);
+            } else {
+
+                $currency->delete();
+                return response()->json(['res' => true]);
+
+            }
+
+        }
     }
 
 

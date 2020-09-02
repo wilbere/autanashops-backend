@@ -119,8 +119,29 @@ class ScoreController extends Controller
      */
     public function destroy(Score $score)
     {
-        $score->delete();
-        return response()->json(["Delete Success",  200]);
+
+        $count = $this->score->count();
+
+        if ($count == 1) {
+            return response()->json([
+                'res' => false,
+                'error' => 'El sistema no puede quedarse sin cuentas registradas.'
+            ]);
+        } else {
+
+            if($score->default) {
+                return response()->json([
+                    'res' => false,
+                    'error' => 'No puedes eliminar la cuenta por defecto del sistema.'
+                ]);
+            } else {
+                $score->delete();
+                return response()->json(["res" => true,  200]);
+            }
+
+        }
+
+
 
     }
 

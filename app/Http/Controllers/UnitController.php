@@ -42,7 +42,11 @@ class UnitController extends Controller
 
         if ($validator->fails()) {
 
-            return response()->json(['Error', $validator->errors()->all(),200]);
+            return response()->json([
+                'res' => false,
+                'error' => $validator->errors()->first(),
+                200
+            ]);
 
         } else {
 
@@ -115,6 +119,6 @@ class UnitController extends Controller
     public function destroy(Unit $unit)
     {
         $unit->delete();
-        return response()->json(['Delete Success', 200]);
+        return response()->json(['res' => true, 200]);
     }
 }

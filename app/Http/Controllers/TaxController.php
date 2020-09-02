@@ -112,6 +112,6 @@ class TaxController extends Controller
     public function destroy(Tax $tax)
     {
         $tax->delete();
-        return response()->json(['Delete Success', 200]);
+        return response()->json(['res' => true, 200]);
     }
 }

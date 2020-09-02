@@ -127,8 +127,18 @@ class WarehouseController extends Controller
      */
     public function destroy(Warehouse $warehouse)
     {
-        $warehouse->delete();
-        return response()->json(['Delete Success', 200]);
+        // return $warehouse->products->count();
+        if($warehouse->products->count() > 0 ) {
+            return response()->json(['res' => false, 'error' => 'No puedes eliminar un almacén que tenga productos en su stock', 200]);
+        } else {
+
+            // $warehouse->user()->dissociate();
+            $warehouse->save();
+            $warehouse->delete();
+
+            return response()->json(['res' => true, 200]);
+
+        }
     }
 
     /**

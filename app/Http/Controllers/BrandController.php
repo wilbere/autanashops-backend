@@ -48,19 +48,41 @@ class BrandController extends Controller
 
             return response()->json([
                 'res' => false,
-                'Error' => $validator->errors()->first(),
+                'error' => $validator->errors()->first(),
                 200
             ]);
 
         } else {
 
-            $this->brand->name = $request->name;
-            $this->brand->save();
+            if ($request->file('image')) {
+                $path = Storage::disk('public')->put('image', $request->file('image'));
 
-            return response()->json([
-                'res' => true,
-                200
-            ]);
+                $image = new Image();
+                $image->url = asset($path);
+
+                $this->brand->name = $request->name;
+                $this->brand->save();
+
+                $this->brand->image()->save($image);
+
+                return response()->json([
+                    'res' => true,
+                    200
+                ]);
+            } else {
+
+                $this->brand->name = $request->name;
+                $this->brand->save();
+
+
+                return response()->json([
+                    'res' => true,
+                    200
+                ]);
+
+            }
+
+
         }
 
     }
@@ -93,18 +115,18 @@ class BrandController extends Controller
 
             return response()->json([
                 'res' => false,
-                'Error' => $validator->errors()->first(),
+                'error' => $validator->errors()->first(),
                 200
             ]);
 
         }
 
-        // if ($request->input('image')) {
-        //     $path = Storage::disk('public')->put('/img', $request->input('image'));
-        //     $image = Image::find($request->image_id);
-        //     $image->url = asset($path);
-        //     $image->save();
-        // }
+        if ($request->file('image')) {
+            $path = Storage::disk('public')->put('image', $request->file('image'));
+            $image = Image::find($request->image_id);
+            $image->url = asset($path);
+            $image->save();
+        }
 
 
         $brand->name = $request->name;
@@ -125,6 +147,6 @@ class BrandController extends Controller
     public function destroy(Brand $brand)
     {
         $brand->delete();
-        return response()->json(['Delete Success', 200]);
+        return response()->json(['res' => true, 200]);
     }
 }
