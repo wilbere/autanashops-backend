@@ -64,7 +64,7 @@ Route::middleware('auth:api')->group(function () {
      * Account Module
      */
     Route::apiResource('/account', 'AccountController');
-    Route::post('/account/{user}', 'AccountController@store')->name('account.store');
+    // Route::post('/account/{user}', 'AccountController@store')->name('account.store');
 
     /**
      * Client Module
@@ -85,7 +85,7 @@ Route::middleware('auth:api')->group(function () {
      * Scores Module
      */
     Route::apiResource('/scores', 'ScoreController');
-    Route::get('/scores/activate/{score}', 'ScoreController@activatedScore')->name('activated.score');
+    // Route::get('/scores/activate/{score}', 'ScoreController@activatedScore')->name('activated.score');
 
 
     /**

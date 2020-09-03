@@ -24,7 +24,8 @@ class ClientController extends Controller
      */
     public function index()
     {
-        return ClientResource::collection($this->client->get());
+        return response()->json(['clients' => ClientResource::collection($this->supplier->get())]);
+
     }
 
     /**
@@ -45,18 +46,51 @@ class ClientController extends Controller
 
         if($validator->fails()){
 
-            return response()->json(['Error', $validator->errors()->all(),200]);
+            return response()->json(['res' => false,'error' => $validator->errors()->first(),200]);
 
         } else {
 
-            $this->client->name = $request->name;
-            $this->client->rif = $request->rif;
-            $this->client->email = $request->email;
-            $this->client->phone = $request->phone;
-            $this->client->is_supplier = $request->is_supplier;
-            $this->client->save();
+            if ($request->file('image')) {
 
-            return response()->json(["Created Success",new ClientResource($this->client), 200]);
+                $path = Storage::disk('public')->put('image', $request->file('image'));
+
+                $image = new Image();
+                $image->url = asset($path);
+
+                $this->client->name = $request->name;
+                $this->client->rif = $request->rif;
+                $this->client->email = $request->email;
+                $this->client->phone = $request->phone;
+                $this->client->is_supplier = true;
+                $this->client->save();
+
+                $this->client->image()->save($image);
+
+                return response()->json([
+                    'res' => true,
+                    'client' => $this->client,
+                    200
+                ]);
+
+            } else {
+
+                $image = new Image();
+                $image->url = 'https://cultura-sorda.org/wp-content/uploads/2015/02/Usuario-Vacio1.png';
+
+                $this->client->name = $request->name;
+                $this->client->rif = $request->rif;
+                $this->client->email = $request->email;
+                $this->client->phone = $request->phone;
+                $this->client->is_supplier = $request->is_supplier;
+                $this->client->save();
+
+                $this->client->image()->save($image);
+
+
+                return response()->json(["res" => true, 'client' => $this->client,
+                200]);
+
+            }
 
         }
     }
@@ -69,7 +103,7 @@ class ClientController extends Controller
      */
     public function show(Client $client)
     {
-        return response()->json([new ClientResource($client), 200]);
+        return response()->json(['client' => new ClientResource($client), 200]);
     }
 
     /**
@@ -91,19 +125,43 @@ class ClientController extends Controller
 
         if($validator->fails()){
 
-            return response()->json(['Error', $validator->errors()->all(),200]);
+            return response()->json(['res' => false,'error' => $validator->errors()->first(),200]);
 
         } else {
 
-            $client->name = $request->name;
-            $client->rif = $request->rif;
-            $client->email = $request->email;
-            $client->phone = $request->phone;
-            $client->is_supplier = $request->is_supplier;
-            $client->save();
+            if ($request->file('image')) {
 
-            return response()->json(["Created Success",new ClientResource($client), 200]);
+                $path = Storage::disk('public')->put('image', $request->file('image'));
+                $image = Image::find($client->image->id);
 
+                Storage::delete($image->url);
+
+                $image->url = asset($path);
+                $image->save();
+
+                $client->name = $request->name;
+                $client->rif = $request->rif;
+                $client->email = $request->email;
+                $client->phone = $request->phone;
+                $client->is_supplier = $request->is_supplier;
+                $client->save();
+
+                return response()->json([
+                    'res' => true,
+                    200
+                ]);
+
+            } else {
+
+                $client->name = $request->name;
+                $client->rif = $request->rif;
+                $client->email = $request->email;
+                $client->phone = $request->phone;
+                $client->is_supplier = $request->is_supplier;
+                $client->save();
+
+                return response()->json(["res" => true,  200]);
+            }
         }
     }
 

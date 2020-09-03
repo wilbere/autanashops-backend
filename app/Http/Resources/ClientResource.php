@@ -21,6 +21,7 @@ class ClientResource extends JsonResource
             'name' => $this->name,
             'phone' => $this->phone,
             'email' => $this->email,
+            'rif' => $this->rif,
             'image' => new ImageResource($this->image),
             'company' => new AccountResource($this->account)
             // 'last_update' => $this->update_at->diff()

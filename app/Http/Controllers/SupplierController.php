@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Client as Supplier;
+use App\Image;
 use Illuminate\Http\Request;
 use App\Http\Resources\ClientResource as SupplierResource;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 
 class SupplierController extends Controller
 {
@@ -23,7 +25,7 @@ class SupplierController extends Controller
      */
     public function index()
     {
-        return supplierResource::collection($this->supplier->where("is_supplier", true)->get());
+        return response()->json(['suppliers' => SupplierResource::collection($this->supplier->where("is_supplier", true)->get())]);
     }
 
     /**
@@ -43,18 +45,51 @@ class SupplierController extends Controller
 
         if($validator->fails()){
 
-            return response()->json(['Error', $validator->errors()->all(),200]);
+            return response()->json(['res' => false,'error' => $validator->errors()->first(),200]);
 
         } else {
 
-            $this->supplier->name = $request->name;
-            $this->supplier->rif = $request->rif;
-            $this->supplier->email = $request->email;
-            $this->supplier->phone = $request->phone;
-            $this->supplier->is_supplier = true;
-            $this->supplier->save();
+            if ($request->file('image')) {
 
-            return response()->json(["Created Success",new SupplierResource($this->supplier), 200]);
+                $path = Storage::disk('public')->put('image', $request->file('image'));
+
+                $image = new Image();
+                $image->url = asset($path);
+
+                $this->supplier->name = $request->name;
+                $this->supplier->rif = $request->rif;
+                $this->supplier->email = $request->email;
+                $this->supplier->phone = $request->phone;
+                $this->supplier->is_supplier = true;
+                $this->supplier->save();
+
+                $this->supplier->image()->save($image);
+
+                return response()->json([
+                    'res' => true,
+                    'supplier' => $this->supplier,
+                    200
+                ]);
+
+            } else {
+
+                $image = new Image();
+                $image->url = 'https://cultura-sorda.org/wp-content/uploads/2015/02/Usuario-Vacio1.png';
+
+                $this->supplier->name = $request->name;
+                $this->supplier->rif = $request->rif;
+                $this->supplier->email = $request->email;
+                $this->supplier->phone = $request->phone;
+                $this->supplier->is_supplier = true;
+                $this->supplier->save();
+
+                $this->supplier->image()->save($image);
+
+
+                return response()->json(["res" => true, 'supplier' => $this->supplier,
+                200]);
+
+            }
 
         }
     }
@@ -88,19 +123,43 @@ class SupplierController extends Controller
 
         if($validator->fails()){
 
-            return response()->json(['Error', $validator->errors()->all(),200]);
+            return response()->json(['res' => false,'error' => $validator->errors()->first(),200]);
 
         } else {
 
-            $supplier->name = $request->name;
-            $supplier->rif = $request->rif;
-            $supplier->email = $request->email;
-            $supplier->phone = $request->phone;
-            $supplier->is_supplier = true;
-            $supplier->save();
+            if ($request->file('image')) {
 
-            return response()->json(["Created Success",new SupplierResource($supplier), 200]);
+                $path = Storage::disk('public')->put('image', $request->file('image'));
+                $image = Image::find($supplier->image->id);
 
+                Storage::delete($image->url);
+
+                $image->url = asset($path);
+                $image->save();
+
+                $supplier->name = $request->name;
+                $supplier->rif = $request->rif;
+                $supplier->email = $request->email;
+                $supplier->phone = $request->phone;
+                $supplier->is_supplier = true;
+                $supplier->save();
+
+                return response()->json([
+                    'res' => true,
+                    200
+                ]);
+
+            } else {
+
+                $supplier->name = $request->name;
+                $supplier->rif = $request->rif;
+                $supplier->email = $request->email;
+                $supplier->phone = $request->phone;
+                $supplier->is_supplier = true;
+                $supplier->save();
+
+                return response()->json(["res" => true,  200]);
+            }
         }
     }
 
