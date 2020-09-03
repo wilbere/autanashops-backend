@@ -17,7 +17,7 @@ class ProductResource extends JsonResource
     public function toArray($request)
     {
         return [
-            "id" => $this->id,
+            "id" => $this->get_id,
             "type" => $this->type,
             "name" => $this->name,
             "barcode" => $this->barcode,

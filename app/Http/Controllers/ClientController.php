@@ -24,7 +24,7 @@ class ClientController extends Controller
      */
     public function index()
     {
-        return response()->json(['clients' => ClientResource::collection($this->supplier->get())]);
+        return response()->json(['clients' => ClientResource::collection($this->client->get())]);
 
     }
 

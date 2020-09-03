@@ -20,6 +20,11 @@ class Product extends Model
         'type','name', 'cost', 'price', 'barcode', 'description', 'alert_qty'
     ];
 
+    public function getGetIdAttribute()
+    {
+        return str_pad($this->id, 8, "0", STR_PAD_LEFT);
+    }
+
     public function brand()
     {
         return $this->belongsTo(Brand::class);
