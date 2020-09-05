@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Client;
+use App\Image;
 use Illuminate\Http\Request;
 use App\Http\Resources\ClientResource;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 
 
 class ClientController extends Controller
@@ -41,7 +43,6 @@ class ClientController extends Controller
             "rif" => "required|max:14",
             "email" => "required|email",
             "phone" => "required|numeric",
-            "is_supplier" => "boolean",
         ]);
 
         if($validator->fails()){
@@ -61,7 +62,7 @@ class ClientController extends Controller
                 $this->client->rif = $request->rif;
                 $this->client->email = $request->email;
                 $this->client->phone = $request->phone;
-                $this->client->is_supplier = true;
+                $this->client->is_supplier = $request->is_supplier;
                 $this->client->save();
 
                 $this->client->image()->save($image);
