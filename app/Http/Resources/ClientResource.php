@@ -18,13 +18,17 @@ class ClientResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'slug' => $this->slug,
             'name' => $this->name,
             'phone' => $this->phone,
             'email' => $this->email,
             'rif' => $this->rif,
+            'identity_card' => $this->identity_card,
+            'type' => $this->type,
+            'address' => $this->address,
+            'city' => $this->city,
+            'country' => $this->country,
             'image' => new ImageResource($this->image),
-            'company' => new AccountResource($this->account)
-            // 'last_update' => $this->update_at->diff()
         ];
     }
 }

@@ -39,10 +39,15 @@ class ClientController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(),[
+            "type" => "required",
             "name" => "required",
-            "rif" => "required|max:14",
+            "rif" => "required|min:9|max:10",
             "email" => "required|email",
             "phone" => "required|numeric",
+            "identity_card" => "required|numeric|min:7|max:8",
+            "address" => "required",
+            "city" => "required",
+            "country" => "required",
         ]);
 
         if($validator->fails()){
@@ -58,11 +63,15 @@ class ClientController extends Controller
                 $image = new Image();
                 $image->url = asset($path);
 
+                $this->client->type = $request->type;
                 $this->client->name = $request->name;
                 $this->client->rif = $request->rif;
+                $this->client->identity_card = $request->identity_card;
                 $this->client->email = $request->email;
                 $this->client->phone = $request->phone;
-                $this->client->is_supplier = $request->is_supplier;
+                $this->client->address = $request->address;
+                $this->client->city = $request->city;
+                $this->client->country = $request->country;
                 $this->client->save();
 
                 $this->client->image()->save($image);
@@ -78,11 +87,15 @@ class ClientController extends Controller
                 $image = new Image();
                 $image->url = 'https://cultura-sorda.org/wp-content/uploads/2015/02/Usuario-Vacio1.png';
 
+                $this->client->type = $request->type;
                 $this->client->name = $request->name;
                 $this->client->rif = $request->rif;
+                $this->client->identity_card = $request->identity_card;
                 $this->client->email = $request->email;
                 $this->client->phone = $request->phone;
-                $this->client->is_supplier = $request->is_supplier;
+                $this->client->address = $request->address;
+                $this->client->city = $request->city;
+                $this->client->country = $request->country;
                 $this->client->save();
 
                 $this->client->image()->save($image);
@@ -117,11 +130,15 @@ class ClientController extends Controller
     public function update(Request $request, Client $client)
     {
         $validator = Validator::make($request->all(),[
+            "type" => "required",
             "name" => "required",
-            "rif" => "required|max:14",
+            "rif" => "required|min:9|max:10",
             "email" => "required|email",
             "phone" => "required|numeric",
-            "is_supplier" => "boolean",
+            "identity_card" => "required|numeric|min:7|max:8",
+            "address" => "required",
+            "city" => "required",
+            "country" => "required",
         ]);
 
         if($validator->fails()){
@@ -135,16 +152,18 @@ class ClientController extends Controller
                 $path = Storage::disk('public')->put('image', $request->file('image'));
                 $image = Image::find($client->image->id);
 
-                Storage::delete($image->url);
-
                 $image->url = asset($path);
                 $image->save();
 
+                $client->type = $request->type;
                 $client->name = $request->name;
                 $client->rif = $request->rif;
+                $client->identity_card = $request->identity_card;
                 $client->email = $request->email;
                 $client->phone = $request->phone;
-                $client->is_supplier = $request->is_supplier;
+                $client->address = $request->address;
+                $client->city = $request->city;
+                $client->country = $request->country;
                 $client->save();
 
                 return response()->json([
@@ -154,11 +173,15 @@ class ClientController extends Controller
 
             } else {
 
+                $client->type = $request->type;
                 $client->name = $request->name;
                 $client->rif = $request->rif;
+                $client->identity_card = $request->identity_card;
                 $client->email = $request->email;
                 $client->phone = $request->phone;
-                $client->is_supplier = $request->is_supplier;
+                $client->address = $request->address;
+                $client->city = $request->city;
+                $client->country = $request->country;
                 $client->save();
 
                 return response()->json(["res" => true,  200]);
