@@ -80,6 +80,8 @@ Route::middleware('auth:api')->group(function () {
      * Product Module
      */
     Route::apiResource('/products', 'ProductController');
+    Route::post('/products/image/{product}', 'ProductController@updateImage');
+    Route::delete('/products/remove-image/{image}', 'ProductController@removeImage');
 
     /**
      * Scores Module

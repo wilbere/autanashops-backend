@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use App\Image;
 use Illuminate\Http\Request;
 use App\Http\Resources\UserResource;
 use App\Http\Resources\UserCollection;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -54,12 +56,9 @@ class UserController extends Controller
                 "password" => Hash::make($request->password)
             ]);
 
+
             $image = new Image();
-            if($request->url_img) {
-                $image->url = $request->url_img;
-            } else {
-                $image->url = "https://cultura-sorda.org/wp-content/uploads/2015/02/Usuario-Vacio1.png";
-            }
+            $image->url = "https://cultura-sorda.org/wp-content/uploads/2015/02/Usuario-Vacio1.png";
 
             $user->image()->save($image);
 
@@ -70,19 +69,11 @@ class UserController extends Controller
 
         } else {
 
-            $errors = $validated->errors();
-
-            $data = [
-                "name" => $errors-first('name'),
-                "username" => $errors-first('username'),
-                "email" => $errors-first('email'),
-                "password" => $errors-first('password'),
-            ];
-
             return response()->json([
-                'res' => true,
-                'err' => $data,
-            ], 422);
+                'res' => false,
+                'error' => $validator->errors()->first(),
+                200
+            ]);
 
         }
     }
@@ -122,6 +113,15 @@ class UserController extends Controller
             ]);
 
         } else {
+
+            if ($request->file('image')) {
+
+                $path = Storage::disk('public')->put('image', $request->file('image'));
+                $image = Image::find($request->image_id);
+                $image->url = asset($path);
+                $image->save();
+
+            } 
 
             $user->name = $request->name;
             $user->username = $request->username;

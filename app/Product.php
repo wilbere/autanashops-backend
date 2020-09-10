@@ -17,7 +17,7 @@ class Product extends Model
      * @var array
      */
     protected $fillable = [
-        'type','name', 'cost', 'price', 'barcode', 'description', 'alert_qty'
+        'type','name', 'cost', 'price', 'barcode', 'description', 'alert_qty', 'wholesale_price', 'wholesale_qty', 'warranty_days', 'weight'
     ];
 
     public function getGetIdAttribute()
