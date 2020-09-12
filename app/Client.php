@@ -15,8 +15,26 @@ class Client extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'rif', 'email', 'phone', 'is_supplier'
+        'type',
+        'name',
+        'rif',
+        'email',
+        'phone',
+        'identity_card',
+        'address',
+        'city',
+        'country'
     ];
+
+    public function getSlugAttribute()
+    {
+        return str_pad($this->id, 8, "0", STR_PAD_LEFT);
+    }
+
+    public function getGetTypeAttribute()
+    {
+        return $this->type == 0 ? 'Persona Natural' : 'Persona Jurídica';
+    }
 
     public function user()
     {

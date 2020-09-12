@@ -10,6 +10,7 @@ $factory->define(Warehouse::class, function (Faker $faker) {
         "name" => $faker->company,
         "phone" => $faker->phoneNumber,
         "email" => $faker->safeEmail,
-        "address" => $faker->address
+        "address" => $faker->address,
+        "user_id" => rand(1,10)
     ];
 });

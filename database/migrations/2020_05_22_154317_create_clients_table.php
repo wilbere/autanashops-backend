@@ -14,23 +14,23 @@ class CreateClientsTable extends Migration
     public function up()
     {
         Schema::create('clients', function (Blueprint $table) {
+
             $table->bigIncrements('id');
 
-            // $table->bigInteger('account_id')->unsigned();
-
+            $table->boolean('type');
             $table->string('name');
             $table->string('email');
             $table->string('phone');
-            $table->string('rif')->nullable()->unique();
-            $table->boolean('is_supplier')->comment('This field will determine if the customer is a supplier or not.');
-
+            $table->string('rif')->unique()->nullable();
+            $table->string('identity_card')->unique()->nullable();
+            $table->string('address');
+            $table->string('city');
+            $table->string('country');
 
             $table->softDeletes();
             $table->timestamps();
 
-            // $table->foreign('user_id')->references('id')->on('users')
-            //     ->onDelete('cascade')
-            //     ->onUpdate('cascade');
+
         });
     }
 
