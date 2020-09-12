@@ -17,7 +17,7 @@ class CreateClientsTable extends Migration
 
             $table->bigIncrements('id');
 
-            $table->string('type');
+            $table->boolean('type');
             $table->string('name');
             $table->string('email');
             $table->string('phone');

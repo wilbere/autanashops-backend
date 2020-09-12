@@ -31,6 +31,11 @@ class Client extends Model
         return str_pad($this->id, 8, "0", STR_PAD_LEFT);
     }
 
+    public function getGetTypeAttribute()
+    {
+        return $this->type == 0 ? 'Persona Natural' : 'Persona Jurídica';
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);

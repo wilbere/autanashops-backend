@@ -41,10 +41,10 @@ class ClientController extends Controller
         $validator = Validator::make($request->all(),[
             "type" => "required",
             "name" => "required",
-            "rif" => "required|min:9|max:10",
+            "rif" => "min:8|max:11|unique:clients",
             "email" => "required|email",
-            "phone" => "required|numeric",
-            "identity_card" => "required|numeric|min:7|max:8",
+            "phone" => "required|min:13|max:15",
+            // "identity_card" => "min:6|max:9|unique:clients",
             "address" => "required",
             "city" => "required",
             "country" => "required",
@@ -65,8 +65,8 @@ class ClientController extends Controller
 
                 $this->client->type = $request->type;
                 $this->client->name = $request->name;
-                $this->client->rif = $request->rif;
-                $this->client->identity_card = $request->identity_card;
+                $this->client->rif = $request->rif == 'undefined' ? NULL : $request->rif;
+                $this->client->identity_card = $request->type == 1 ? NULL : $request->identity_card;
                 $this->client->email = $request->email;
                 $this->client->phone = $request->phone;
                 $this->client->address = $request->address;
@@ -89,8 +89,8 @@ class ClientController extends Controller
 
                 $this->client->type = $request->type;
                 $this->client->name = $request->name;
-                $this->client->rif = $request->rif;
-                $this->client->identity_card = $request->identity_card;
+                $this->client->rif = $request->rif == 'undefined' ? NULL : $request->rif;
+                $this->client->identity_card = $request->type == 1 ? NULL : $request->identity_card;
                 $this->client->email = $request->email;
                 $this->client->phone = $request->phone;
                 $this->client->address = $request->address;
@@ -134,8 +134,8 @@ class ClientController extends Controller
             "name" => "required",
             "rif" => "required|min:9|max:10",
             "email" => "required|email",
-            "phone" => "required|numeric",
-            "identity_card" => "required|numeric|min:7|max:8",
+            "phone" => "required|min:13|max:15",
+            // "identity_card" => "numeric|min:7",
             "address" => "required",
             "city" => "required",
             "country" => "required",
@@ -157,8 +157,8 @@ class ClientController extends Controller
 
                 $client->type = $request->type;
                 $client->name = $request->name;
-                $client->rif = $request->rif;
-                $client->identity_card = $request->identity_card;
+                $client->rif = $request->rif == 'undefined' ? NULL : $request->rif;
+                $client->identity_card = $request->type == 1 ? NULL : $request->identity_card;
                 $client->email = $request->email;
                 $client->phone = $request->phone;
                 $client->address = $request->address;
@@ -175,8 +175,8 @@ class ClientController extends Controller
 
                 $client->type = $request->type;
                 $client->name = $request->name;
-                $client->rif = $request->rif;
-                $client->identity_card = $request->identity_card;
+                $client->rif = $request->rif == 'undefined' ? NULL : $request->rif;
+                $client->identity_card = $request->type == 1 ? NULL : $request->identity_card;
                 $client->email = $request->email;
                 $client->phone = $request->phone;
                 $client->address = $request->address;
