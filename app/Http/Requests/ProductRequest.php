@@ -25,10 +25,14 @@ class ProductRequest extends FormRequest
     {
         return [
             "name" => "required",
-            "cost" => "required|numeric",
-            "price" => "required|numeric",
-            "barcode" => "required",
-            "alert_qty" => "required",
+            "barcode" => "required|unique:products",
+            "cost" => "required|numeric|min:0.00|max:99999999999999999999.99|regex:/^\d+(\.\d{1,2})?$/",
+            "price" => "required|numeric|min:0.00|max:99999999999999999999.99|regex:/^\d+(\.\d{1,2})?$/",
+            "weight" => "required|numeric|min:0.00|max:9999999999.99|regex:/^\d+(\.\d{1,2})?$/",
+            // "wholesale_price" => "numeric|min:0.00|max:99999999999999999999.99|regex:/^\d+(\.\d{1,2})?$/",
+            // "wholesale_qty" => "numeric",
+            // "warranty_days" => "numeric",
+            "alert_qty" => "required|numeric",
             "category" => "required",
             "unit" => "required",
             "brand" => "required",

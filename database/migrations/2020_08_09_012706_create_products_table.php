@@ -15,24 +15,24 @@ class CreateProductsTable extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
+            
             $table->unsignedBigInteger('brand_id')->unsigned();
-            $table->unsignedBigInteger('tax_id')->unsigned();
 
-            $table->string('type');
             $table->string('name');
             $table->string('cost');
             $table->string('price');
+            $table->string('wholesale_price')->nullable();
+            $table->string('wholesale_qty')->nullable();
+            $table->string('warranty_days')->nullable();
             $table->string('barcode')->unique();
             $table->text('description')->nullable();
             $table->string('alert_qty');
+            $table->string('weight');
 
             $table->softDeletes();
             $table->timestamps();
 
-
             $table->foreign('brand_id')->references('id')->on('brands');
-
-            $table->foreign('tax_id')->references('id')->on('taxes');
 
         });
     }

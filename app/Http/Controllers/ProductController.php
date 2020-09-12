@@ -11,6 +11,7 @@ use App\Image;
 use Illuminate\Http\Request;
 use App\Http\Resources\ProductResource;
 use App\Http\Requests\ProductRequest;
+use Illuminate\Support\Facades\Storage;
 
 
 class ProductController extends Controller
@@ -42,39 +43,29 @@ class ProductController extends Controller
         $category = Category::find($request->category);
         $unit = Unit::find($request->unit);
 
-        $this->product->type = $request->type;
+        // $this->product->type = $request->type;
         $this->product->name = $request->name;
         $this->product->barcode = $request->barcode;
         $this->product->cost = $request->cost;
         $this->product->price = $request->price;
+        $this->product->weight = $request->weight;
         $this->product->alert_qty = $request->alert_qty;
+        $this->product->wholesale_price = $request->wholesale_price;
+        $this->product->wholesale_qty = $request->wholesale_qty;
+        $this->product->warranty_days = $request->warranty_days;
         $this->product->description = $request->description;
 
-        $this->product->tax()->associate($request->tax);
-        $this->product->brand()->associate($request->brand);
+        if ($request->brand) {
+            $this->product->brand()->associate($request->brand);
+        }
+
         $this->product->save();
 
         $this->product->units()->save($unit);
-        $this->product->syncTags($request->tags);
+        // $this->product->syncTags($request->tags);
         $this->product->category()->save($category);
 
-        if ($request->image) {
-
-                $img = new Image();
-                $img->url = $request->image;
-                $this->product->images()->save($img);
-
-        } else {
-
-            $img = new Image();
-
-            $img->url ="https://cultura-sorda.org/wp-content/uploads/2015/02/Usuario-Vacio1.png";
-
-            $this->product->images()->save($img);
-
-        }
-
-        return response()->json(['Created Success', new ProductResource($this->product),200]);
+        return response()->json(['res' => true, 'product' => new ProductResource($this->product),200]);
 
     }
 
@@ -106,7 +97,11 @@ class ProductController extends Controller
         $product->barcode = $request->barcode;
         $product->cost = $request->cost;
         $product->price = $request->price;
+        $product->weight = $request->weight;
         $product->alert_qty = $request->alert_qty;
+        $product->wholesale_price = $request->wholesale_price;
+        $product->wholesale_qty = $request->wholesale_qty;
+        $product->warranty_days = $request->warranty_days;
         $product->description = $request->description;
 
         $product->tax()->associate($request->tax);
@@ -116,22 +111,6 @@ class ProductController extends Controller
         $product->units()->save($unit);
         $product->syncTags($request->tags);
         $product->category()->save($category);
-
-        if ($request->image) {
-
-                $img = new Image();
-                $img->url = $request->image;
-                $product->images()->save($img);
-
-        } else {
-
-            $img = new Image();
-
-            $img->url ="https://cultura-sorda.org/wp-content/uploads/2015/02/Usuario-Vacio1.png";
-
-            $product->images()->save($img);
-
-        }
 
         return response()->json(['Updated Success', new ProductResource($product),200]);
 
@@ -145,7 +124,47 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        $product->delete();
-        return response()->json(["Delete success", 200]);
+        // $product->delete();
+        // return response()->json(["Delete success", 200]);
     }
+
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Product  $product
+     * @return \Illuminate\Http\Response
+     */
+    public function updateImage(Request $request, Product $product)
+    {
+        if ($request->file('image')) {
+
+            $path = Storage::disk('public')->put('image/product', $request->file('image'));
+
+            $image = new Image();
+            $image->url = asset($path);
+
+
+            $product->image()->save($image);
+
+            return response()->json([
+                'res' => true,
+                200
+            ]);
+        }
+    }
+
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Product  $product
+     * @return \Illuminate\Http\Response
+     */
+    public function removeImage(Request $request, Image $image)
+    {
+        $image->delete();
+        return response()->json(["res" => true, 200]);
+    }
+
 }
