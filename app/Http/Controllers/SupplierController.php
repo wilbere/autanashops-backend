@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Client as Supplier;
+use App\Supplier;
 use App\Image;
 use Illuminate\Http\Request;
-use App\Http\Resources\ClientResource as SupplierResource;
+use App\Http\Resources\SupplierResource;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 
@@ -25,7 +25,7 @@ class SupplierController extends Controller
      */
     public function index()
     {
-        return response()->json(['suppliers' => SupplierResource::collection($this->supplier->where("is_supplier", true)->get())]);
+        return response()->json(['suppliers' => SupplierResource::collection($this->supplier->get())]);
     }
 
     /**
